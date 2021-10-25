@@ -54,8 +54,8 @@ def upload_image():
     # If no valid image file was uploaded, show the file upload form:
     return '''
     <!doctype html>
-    <title>Is this a picture of Obama?</title>
-    <h1>Upload a picture and see if it's a picture of Obama!</h1>
+    <title>CQCF Glass</title>
+    <h1>Upload a picture here!</h1>
     <form method="POST" enctype="multipart/form-data">
       <input type="file" name="file">
       <input type="submit" value="Upload">
