@@ -42,6 +42,7 @@ import pickle
 from PIL import Image, ImageDraw
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
+from sklearn.metrics import accuracy_score 
 import numpy as np
 
 
@@ -104,6 +105,8 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
     # Create and train the KNN classifier
     knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
     knn_clf.fit(X, y)
+    acc_knn = accuracy_score(y, knn_clf.predict(X)) 
+    print('KNN training accuracy = ' + str(100*acc_knn) + '%')
 
     # Save the trained KNN classifier
     if model_save_path is not None:
@@ -189,27 +192,7 @@ def show_prediction_labels_on_image(frame, predictions):
 
 
 if __name__ == "__main__":
-#    print("Training KNN classifier...")
-#    classifier = train("knn_examples/train", model_save_path="trained_knn_model.clf", n_neighbors=2)
-#    print("Training complete!")
-    # process one frame in every 30 frames for speed
-    process_this_frame = 29
-    print('Setting cameras up...')
-    # multiple cameras can be used with the format url = 'http://username:password@camera_ip:port'
-    # url = 'http://admin:admin@192.168.0.106:8081/'
-    cap = cv2.VideoCapture(0)
-    while 1 > 0:
-        ret, frame = cap.read()
-        if ret:
-            # Different resizing options can be chosen based on desired program runtime.
-            # Image resizing for more stable streaming
-            img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
-            process_this_frame = process_this_frame + 1
-            if process_this_frame % 30 == 0:
-                predictions = predict(img, model_path="trained_knn_model.clf")
-            frame = show_prediction_labels_on_image(frame, predictions)
-            cv2.imshow('camera', frame)
-            if ord('q') == cv2.waitKey(10):
-                cap1.release()
-                cv2.destroyAllWindows()
-                exit(0)
+    print("Training KNN classifier...")
+    classifier = train("knn_examples/train", model_save_path="trained_knn_model.clf", n_neighbors=2)
+    print("Training complete!")
+    
